@@ -2,6 +2,7 @@ import sys  # Only needed for access to command line arguments
 
 from PyQt5.QtWidgets import QApplication
 from model.NumberModel import NumberModel
+from model.ToDoModel import ToDoModel
 from view.Ui_MainWindow import MainView
 from controller.MainController import MainController
 
@@ -14,12 +15,14 @@ class App(QApplication):
         super(App, self).__init__(sys_argv)
         # Instances the model's object which handles data
         self._numberModel = NumberModel()
+        self._listModel = ToDoModel()
 
         # Instances the main controller and pass the model's object
         self._mainController = MainController(self._numberModel)
 
         # Instances the MainView class and passes model and controller objects
-        self._mainView = MainView(self._numberModel, self._mainController)
+        self._mainView = MainView(
+            self._numberModel, self._listModel, self._mainController)
 
         self._mainView.show()  # IMPORTANT!!!!! Windows are hidden by default.
 

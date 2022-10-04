@@ -2,9 +2,8 @@ from PyQt5.QtCore import QObject, pyqtSlot
 
 
 class MainController(QObject):
-    def __init__(self, model):
+    def __init__(self, model) -> None:
         super().__init__()
-
         self._model = model
 
     @pyqtSlot(int)
