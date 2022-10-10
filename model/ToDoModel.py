@@ -1,9 +1,10 @@
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 
 class ToDoModel(QObject):
 
-    itemChanged = pyqtSignal(list)
+    # INotifyPropertyChanged sends a signal
+    itemChanged = pyqtSignal(str)
     completeCheckChanged = pyqtSignal(bool)
 
 # region Properties
@@ -14,8 +15,7 @@ class ToDoModel(QObject):
     @item.setter
     def item(self, value: str) -> None:
         self._item = value
-        self.toDoList.append(self._item)
-        self.itemChanged.emit(self.toDoList)
+        self.itemChanged.emit(value)
 
     @property
     def completeCheck(self) -> bool:
@@ -25,14 +25,6 @@ class ToDoModel(QObject):
     def completeCheck(self, value: bool) -> None:
         self._completeCheck = value
         self.completeCheckChanged.emit(value)
-
-    @property
-    def toDoList(self) -> list:
-        return self._toDoList
-
-    @toDoList.setter
-    def toDoList(self, value: list) -> None:
-        self._toDoList.append(self._listModel.item)
 # endregion
 
 # region Constructors
@@ -41,5 +33,17 @@ class ToDoModel(QObject):
 
         self._item: str = ''
         self._completeCheck: bool = False
-        self._toDoList = []
+        self._toDoList: list = []
 # endregion
+
+    @pyqtSlot(str)  # Add an item to the list
+    def addItem(self, value: str) -> None:
+        self.item = value
+        self._toDoList.append(self.item)
+
+    @pyqtSlot(str)
+    def removeItem(self, value: str) -> None:
+        self._toDoList.remove(value)
+
+    def cleanList(self) -> None:  # Cleans the list
+        self._toDoList.clear()
